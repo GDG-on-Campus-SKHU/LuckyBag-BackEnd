@@ -23,5 +23,4 @@ public abstract class BaseTime {
 
     @LastModifiedDate
     protected LocalDateTime lastModifiedDate;
-
 }
