@@ -1,6 +1,7 @@
 package com.luckybag.luckybagbackend.domain.DTO;
 
 
+import com.luckybag.luckybagbackend.domain.Color;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +19,9 @@ public class LuckyBagDTO {
 
     private String comment;
 
-    private int color;
+    private Long colorId;
 
-    private Long like;
+    private Long likeCount;
 
     private LocalDateTime createDate;
 
