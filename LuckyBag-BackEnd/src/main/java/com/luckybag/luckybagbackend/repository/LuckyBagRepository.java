@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface LuckyBagRepository extends JpaRepository<LuckyBag, Long> {
-    LuckyBag findByMemberId(String memberId);
-
+    LuckyBag findByMemberId(Long memberId);
+    void deleteByMemberId(Long id);
 }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "luckybag")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -36,7 +37,6 @@ public class LuckyBag extends BaseTime {
     @Column
     private LocalDateTime lastModifiedTime;
 
-
     public LuckyBagDTO toDto() {
         return LuckyBagDTO.builder()
                 .memberId(memberId)
@@ -45,6 +45,7 @@ public class LuckyBag extends BaseTime {
                 .likeCount(likeCount)
                 .createDate(createDate)
                 .lastModifiedDate(lastModifiedDate)
+                .id(id)
                 .build();
 
     }
