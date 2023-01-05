@@ -4,7 +4,6 @@ import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "member")
@@ -15,25 +14,37 @@ import java.time.LocalDate;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Column(name = "user_id", nullable = false) // sql 등록용(데베로 볼땐 이걸로)
-    private String userId; // 자바용
+    @Column(name = "user_id", nullable = false)
+    private String memberId; // 자바용
 
     @Column(name = "user_password", nullable = false)
-    private String userPassword;
+    private String memberPassword;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "member_name")
+    private String memberName;
 
+    @OneToOne(mappedBy = "member")
+    private LuckyBag luckyBag;
     @Column(name = "nickname", nullable = false)
     private String nickname;
+    @Column
+    @Convert(converter = BooleanToYNConverter.class)
+    private boolean hasLuckyBag;
+    public void updateHasLuckyBag(boolean hasLuckyBag) {
+        this.hasLuckyBag = hasLuckyBag;
+    }
+
+
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
-                .userId(userId)
+                .id(id)
                 .nickname(nickname)
+                .hasLuckyBag(hasLuckyBag)
                 .build();
     }
+
 }

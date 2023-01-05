@@ -1,15 +1,18 @@
 package com.luckybag.luckybagbackend.service;
 import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
+import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
 import com.luckybag.luckybagbackend.domain.LuckyBag;
 import com.luckybag.luckybagbackend.repository.LuckyBagRepository;
 import com.luckybag.luckybagbackend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class LuckyBagService {
 
@@ -26,25 +29,18 @@ public class LuckyBagService {
 
     // 덕담 조회
     @Transactional(readOnly = true)
-    public LuckyBagDTO findByMemberId(LuckyBagDTO dto) {
-        Long memberId = dto.getMemberId();//가져온 dto에서 memberId를 가져온다.
+    public LuckyBagDTO findByMemberId(MemberDTO memberDTO) {
+        Long memberId = memberDTO.getId();//가져온 dto에서 memberId를 가져온다.
         LuckyBag luckyBag = luckyBagRepository.findByMemberId(memberId);//memberId로 luckyBag을 찾기
         return luckyBag.toDto();
     }
 
-    // 덕담 저장
-    @Transactional
-    public LuckyBagDTO save(LuckyBagDTO dto) {
-        LuckyBag luckyBag = dto.toEntity();
-        return luckyBagRepository.saveAndFlush(luckyBag).toDto();
-    }
 
     // 덕담 수정
     @Transactional
-    public LuckyBagDTO update(Long memberId, LuckyBagDTO dto) {
-        LuckyBag luckyBag = luckyBagRepository.findByMemberId(memberId);
-        luckyBag.setColorId(dto.getColorId());
-        luckyBag.setComment(dto.getComment());
+    public LuckyBagDTO update(LuckyBagDTO dto) {
+        LuckyBag luckyBag = luckyBagRepository.findByMemberId(dto.getMemberDTO().getId());
+        luckyBag.update(dto);
         return luckyBag.toDto();
     }
 

@@ -4,49 +4,45 @@ import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "luckybag")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 public class LuckyBag extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "luckybag_id", nullable = false)
     private Long id;
-
-    @Column(name = "member_id")
-    private Long memberId;
 
     @Column
     private String comment;
 
     @Column
-    private Long colorId;
-
-    @Column
     private Long likeCount;
 
-    @Column
-    private LocalDateTime createTime;
+    @OneToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Column
-    private LocalDateTime lastModifiedTime;
+    @ManyToOne
+    @JoinColumn(name = "color_id")
+    private Color color;
+
+
+    public void update(LuckyBagDTO dto) {
+        this.color.update(dto.getColorDTO().getColorId());
+        this.comment = dto.getComment();
+    }
 
     public LuckyBagDTO toDto() {
         return LuckyBagDTO.builder()
-                .memberId(memberId)
                 .comment(comment)
-                .colorId(colorId)
+                .colorDTO(color.toDto())
                 .likeCount(likeCount)
-                .createDate(createDate)
-                .lastModifiedDate(lastModifiedDate)
-                .id(id)
+                .memberDTO(member.toDTO())
                 .build();
-
     }
 }
