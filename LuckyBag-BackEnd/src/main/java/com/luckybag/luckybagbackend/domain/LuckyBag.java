@@ -14,38 +14,35 @@ import javax.persistence.*;
 public class LuckyBag extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "luckybag_id", nullable = false)
     private Long id;
-
-    @Column(name = "memberId")
-    private Long memberId;
 
     @Column
     private String comment;
 
     @Column
-    private Long colorId;
-
-    @Column
     private Long likeCount;
 
-    @OneToOne(mappedBy = "luckyBag",fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(mappedBy = "luckyBag", fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "color_id")
     private Color color;
+
+
     public void update(LuckyBagDTO dto) {
-        this.colorId = dto.getColorDTO().getColorId();
+        this.color.update(dto.getColorDTO().getColorId());
         this.comment = dto.getComment();
     }
 
     public LuckyBagDTO toDto() {
         return LuckyBagDTO.builder()
-                .memberDTO(member.toDTO())
                 .comment(comment)
                 .colorDTO(color.toDto())
                 .likeCount(likeCount)
+                .memberDTO(member.toDTO())
                 .build();
-
     }
 }

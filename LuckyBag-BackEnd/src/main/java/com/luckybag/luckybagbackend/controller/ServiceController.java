@@ -42,7 +42,9 @@ public class ServiceController {//Service Test 용 Controller
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("이미 덕담을 작성하였습니다.");
         }
         LuckyBagDTO luckyBagDTO = LuckyBagDTO.builder().memberDTO(memberDTO).colorDTO(colorDTO).comment("새해입니다.").likeCount(3L).build();
-        return ResponseEntity.ok(commonService.save(luckyBagDTO));
+        LuckyBagDTO saveLuckyBag = commonService.save(luckyBagDTO);
+        log.info("saveLuckyComment ={}",saveLuckyBag.getComment());
+        return ResponseEntity.ok(saveLuckyBag);
     }
     @GetMapping("/update")
     public ResponseEntity update() {

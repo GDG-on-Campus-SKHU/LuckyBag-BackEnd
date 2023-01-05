@@ -14,18 +14,20 @@ import javax.persistence.*;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Column(name = "member_id", nullable = false) // sql 등록용(데베로 볼땐 이걸로)
+    @Column(name = "user_id", nullable = false)
     private String memberId; // 자바용
 
-    @Column(name = "member_password", nullable = false)
+    @Column(name = "user_password", nullable = false)
     private String memberPassword;
 
     @Column(name = "member_name")
     private String memberName;
 
+    @OneToOne(mappedBy = "member")
+    private LuckyBag luckyBag;
     @Column(name = "nickname", nullable = false)
     private String nickname;
     @Column
@@ -35,9 +37,7 @@ public class Member {
         this.hasLuckyBag = hasLuckyBag;
     }
 
-    @OneToOne
-    @JoinColumn(name = "id")
-    private LuckyBag luckyBag;
+
 
     public MemberDTO toDTO() {
         return MemberDTO.builder()
