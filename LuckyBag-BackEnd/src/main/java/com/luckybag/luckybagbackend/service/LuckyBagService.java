@@ -1,4 +1,5 @@
 package com.luckybag.luckybagbackend.service;
+import com.luckybag.luckybagbackend.domain.Color;
 import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
 import com.luckybag.luckybagbackend.domain.DTO.NewLuckyBagDTO;
@@ -22,7 +23,7 @@ public class LuckyBagService {
 
     private final LuckyBagRepository luckyBagRepository;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
+    private final ColorService colorService;
 
     // 덕담 모두 조회
     @Transactional(readOnly = true)
@@ -43,17 +44,18 @@ public class LuckyBagService {
 
     // 덕담 저장
     @Transactional
-    public LuckyBagDTO saveEntity(NewLuckyBagDTO newLuckyBagDTO) {
-        Member member = memberService.findEntityById(newLuckyBagDTO.getMemberId());
+    public LuckyBagDTO saveEntity(Long MemberId,Long ColorId,NewLuckyBagDTO newLuckyBagDTO) {
+        Member member = memberService.findEntityById(MemberId);
+        Color color = colorService.findColor(ColorId);
         // 1. 읽어들여온 DTO 데이터를 바탕으로 Entity 클래스의 객체를 생성한다.
         LuckyBag luckyBag = LuckyBag.builder()
-                .color_name(newLuckyBagDTO.getColorName())
+                .color(color)
                 .comment(newLuckyBagDTO.getComment())
-                .likeCount(0L)
                 .member(member)
                 .build();
         // 2. 생성한 Entity 객체를 저장한다.
         LuckyBag savedLuckyBag = luckyBagRepository.save(luckyBag);
+        log.info("savedLuckyBagColorName={}",savedLuckyBag.getColor().getColorName());
         Member savedMember = savedLuckyBag.getMember();
         member.updateHasLuckyBag(true);
         log.info("savedMemberId = {} ",savedMember.getId());
@@ -66,7 +68,7 @@ public class LuckyBagService {
 
         LuckyBagDTO luckyBagDTO = LuckyBagDTO.builder()
                 .luckyBagId(savedLuckyBag.getId())
-                .colorName(savedLuckyBag.getColor_name())
+                .color(savedLuckyBag.getColor())
                 .comment(savedLuckyBag.getComment())
                 .memberDTO(memberDto)
                 .build();
