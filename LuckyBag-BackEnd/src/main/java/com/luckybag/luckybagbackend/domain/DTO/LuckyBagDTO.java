@@ -1,6 +1,7 @@
 package com.luckybag.luckybagbackend.domain.DTO;
 
 
+import com.luckybag.luckybagbackend.domain.Color;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class LuckyBagDTO {
 
     private String comment; // 덕담 내용
 
-    private String colorName; // 복주머니 색깔
+    private Color color; // 복주머니 색깔
 
     private MemberDTO memberDTO; // 멤버 정보
 
