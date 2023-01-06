@@ -8,11 +8,11 @@ import com.luckybag.luckybagbackend.service.LuckyBagService;
 import com.luckybag.luckybagbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.annotation.RequestScope;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,15 +24,17 @@ public class ServiceController {//Service Test 용 Controller
 
 // [Get] /luckybags -> 모두 조회
 // [Get] /luckybags/{id} -> 복주머니 리스트에서 하나만 조회
-// [Post] /members/{id}/luckybags -> 저장
+// [Post] /members/{id}/{colorId}/luckybags -> 저장
 // [patch] /luckybas/{id} -> 수정
 // [delete] /luckybags/{id} -> 삭제
 
     // 복주머니 모두 조회
     // 6개 씩 페이징 예정
     @GetMapping("/luckybags")
-    public ResponseEntity<List<LuckyBagDTO>> findAll() {
-        return ResponseEntity.ok(luckyBagService.findByAll());
+    public Page<LuckyBagDTO> findAllWithDefault(@PageableDefault(size = 6) Pageable pageable) {
+        Page<LuckyBagDTO> responses = luckyBagService.findAllWithPaging(pageable);
+        log.info("responsesSize = {}", responses.getSize());
+        return responses;
     }
 
     // 복주머니 하나만 조회
@@ -66,5 +68,7 @@ public class ServiceController {//Service Test 용 Controller
         luckyBagService.update(id, updateLuckyBagDTO);
         return ResponseEntity.ok(null);
     }
+
+
 
 }

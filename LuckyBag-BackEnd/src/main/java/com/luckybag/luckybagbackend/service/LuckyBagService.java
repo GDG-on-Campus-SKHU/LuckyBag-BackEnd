@@ -1,4 +1,5 @@
 package com.luckybag.luckybagbackend.service;
+
 import com.luckybag.luckybagbackend.domain.Color;
 import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
@@ -7,9 +8,10 @@ import com.luckybag.luckybagbackend.domain.DTO.UpdateLuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.LuckyBag;
 import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.repository.LuckyBagRepository;
-import com.luckybag.luckybagbackend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,18 @@ public class LuckyBagService {
         return luckyBags.stream()
                 .map(LuckyBag::toDto)
                 .collect(Collectors.toList());
+    }
+
+    // 덕담 페이징
+    @Transactional(readOnly = true)
+    public Page<LuckyBagDTO> findAllWithPaging(Pageable pageable) {
+        return luckyBagRepository.findAll(pageable).map(luckyBag ->
+                LuckyBagDTO.builder()
+                        .luckyBagId(luckyBag.getId())
+                        .comment(luckyBag.getComment())
+                        .color(luckyBag.getColor())
+                        .memberDTO(luckyBag.getMember().toDTO())
+                        .build());
     }
 
     // 덕담 조회
