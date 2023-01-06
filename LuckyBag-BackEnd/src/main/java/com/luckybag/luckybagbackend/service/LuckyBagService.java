@@ -34,9 +34,9 @@ public class LuckyBagService {
 
     // 덕담 조회
     @Transactional(readOnly = true)
-    public LuckyBagDTO findByMemberId(MemberDTO memberDTO) {
-        Long memberId = memberDTO.getId();
-        LuckyBag luckyBag = luckyBagRepository.findByMemberId(memberId);
+    public LuckyBagDTO findByMemberId(Long id) {
+        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id);
+        log.info("luckybag_Member_nickname={}",luckyBag.getMember().getNickname());
         return luckyBag.toDto();
     }
 
@@ -51,12 +51,11 @@ public class LuckyBagService {
                 .likeCount(0L)
                 .member(member)
                 .build();
-
         // 2. 생성한 Entity 객체를 저장한다.
         LuckyBag savedLuckyBag = luckyBagRepository.save(luckyBag);
         Member savedMember = savedLuckyBag.getMember();
         member.updateHasLuckyBag(true);
-
+        log.info("savedMemberId = {} ",savedMember.getId());
         // 3. dto return
         MemberDTO memberDto = MemberDTO.builder()
                 .id(savedMember.getId())

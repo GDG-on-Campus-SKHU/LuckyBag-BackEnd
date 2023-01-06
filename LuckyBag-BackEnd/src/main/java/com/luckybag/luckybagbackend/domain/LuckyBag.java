@@ -36,7 +36,9 @@ public class LuckyBag extends BaseTime {
     }
 
     public LuckyBagDTO toDto() {
+
         return LuckyBagDTO.builder()
+                .luckyBagId(id)
                 .comment(comment)
                 .colorName(color_name)
                 .memberDTO(member.toDTO())
