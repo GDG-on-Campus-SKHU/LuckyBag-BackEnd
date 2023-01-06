@@ -61,5 +61,10 @@ public class ServiceController {//Service Test 용 Controller
         return ResponseEntity.ok(null);
     }
 
+    @PatchMapping("/luckybags/{id}")
+    public ResponseEntity<Void> update(@PathVariable("id")Long id,@RequestBody UpdateLuckyBagDTO updateLuckyBagDTO) {
+        luckyBagService.update(id, updateLuckyBagDTO);
+        return ResponseEntity.ok(null);
+    }
 
 }

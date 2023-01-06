@@ -2,6 +2,7 @@ package com.luckybag.luckybagbackend.service;
 import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
 import com.luckybag.luckybagbackend.domain.DTO.NewLuckyBagDTO;
+import com.luckybag.luckybagbackend.domain.DTO.UpdateLuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.LuckyBag;
 import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.repository.LuckyBagRepository;
@@ -78,4 +79,12 @@ public class LuckyBagService {
     public void deleteByMemberId(Long memberId) {
         luckyBagRepository.deleteByMemberId(memberId);
     }
+    @Transactional
+    public LuckyBagDTO update(Long id, UpdateLuckyBagDTO updateluckyBagDTO) {
+        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id);
+        return luckyBag.update(updateluckyBagDTO);
+    }
+
+
+
 }
