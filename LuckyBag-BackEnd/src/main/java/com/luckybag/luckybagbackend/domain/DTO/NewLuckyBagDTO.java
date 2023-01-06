@@ -14,5 +14,5 @@ public class NewLuckyBagDTO {
 
     private String comment; // 내용
 
-
+    private Color color;
 }
