@@ -45,6 +45,7 @@ public class Member {
         return MemberDTO.builder()
                 .id(id)
                 .hasLuckyBag(hasLuckyBag)
+                .nickname(nickname)
                 .build();
     }
 

@@ -3,12 +3,14 @@ package com.luckybag.luckybagbackend.controller;
 import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
 import com.luckybag.luckybagbackend.domain.DTO.NewLuckyBagDTO;
+import com.luckybag.luckybagbackend.domain.DTO.UpdateLuckyBagDTO;
 import com.luckybag.luckybagbackend.service.LuckyBagService;
 import com.luckybag.luckybagbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class ServiceController {//Service Test 용 Controller
     @GetMapping("/luckybags/{id}")
     public ResponseEntity<LuckyBagDTO> findByMemberId(@PathVariable("id") Long id) {
         MemberDTO memberDTO = memberService.findById(id);
-        return ResponseEntity.ok(luckyBagService.findByMemberId(memberDTO));
+        return ResponseEntity.ok(luckyBagService.findByMemberId(id));
     }
 
     // 복주머니 저장
@@ -58,4 +60,6 @@ public class ServiceController {//Service Test 용 Controller
         luckyBagService.deleteByMemberId(id);
         return ResponseEntity.ok(null);
     }
+
+
 }
