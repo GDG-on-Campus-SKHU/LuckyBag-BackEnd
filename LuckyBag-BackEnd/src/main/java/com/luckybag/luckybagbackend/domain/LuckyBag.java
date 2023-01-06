@@ -18,9 +18,6 @@ public class LuckyBag extends BaseTime {
     @Column(name = "luckybag_id", nullable = false)
     private Long id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "color_id")
     private Color color;
     @Column
     private String comment;

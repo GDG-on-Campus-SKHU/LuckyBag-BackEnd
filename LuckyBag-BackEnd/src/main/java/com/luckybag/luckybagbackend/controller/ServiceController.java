@@ -45,11 +45,11 @@ public class ServiceController {//Service Test 용 Controller
     }
 
     // 복주머니 저장
-    @PostMapping("members/{id}/{colorId}/luckybags")
-    public ResponseEntity<LuckyBagDTO> save(@PathVariable("id") Long id,@PathVariable("colorId")Long colorId,@RequestBody NewLuckyBagDTO newLuckyBagDTO) {
+    @PostMapping("members/{id}/luckybags")
+    public ResponseEntity<LuckyBagDTO> save(@PathVariable("id") Long id,@RequestBody NewLuckyBagDTO newLuckyBagDTO) {
 
         // DTO를 파라미터로 받아 DTO를 리턴하는 saveEntity() 호출
-        LuckyBagDTO luckyBagDTO = luckyBagService.saveEntity(id,colorId,newLuckyBagDTO);
+        LuckyBagDTO luckyBagDTO = luckyBagService.saveEntity(id,newLuckyBagDTO);
 
         return ResponseEntity.ok(luckyBagDTO);
     }
