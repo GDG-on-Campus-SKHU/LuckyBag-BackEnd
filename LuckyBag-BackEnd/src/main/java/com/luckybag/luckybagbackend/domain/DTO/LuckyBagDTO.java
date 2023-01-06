@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LuckyBagDTO {
 
-    private String comment;
+    private Long luckyBagId;
 
-    private ColorDTO colorDTO;
+    private String comment; // 덕담 내용
 
-    private Long likeCount;
+    private String colorName; // 복주머니 색깔
 
-    private MemberDTO memberDTO;
+    private MemberDTO memberDTO; // 멤버 정보
 
 }

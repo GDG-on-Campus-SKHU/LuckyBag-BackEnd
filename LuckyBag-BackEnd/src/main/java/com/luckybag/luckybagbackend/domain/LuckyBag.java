@@ -18,6 +18,9 @@ public class LuckyBag extends BaseTime {
     private Long id;
 
     @Column
+    private String color_name;
+
+    @Column
     private String comment;
 
     @Column
@@ -27,21 +30,15 @@ public class LuckyBag extends BaseTime {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "color_id")
-    private Color color;
-
-
-    public void update(LuckyBagDTO dto) {
-        this.color.update(dto.getColorDTO().getColorId());
-        this.comment = dto.getComment();
+    public void update(LuckyBagDTO luckyBagDTO) {
+        this.color_name = luckyBagDTO.getColorName();
+        this.comment = luckyBagDTO.getComment();
     }
 
     public LuckyBagDTO toDto() {
         return LuckyBagDTO.builder()
                 .comment(comment)
-                .colorDTO(color.toDto())
-                .likeCount(likeCount)
+                .colorName(color_name)
                 .memberDTO(member.toDTO())
                 .build();
     }

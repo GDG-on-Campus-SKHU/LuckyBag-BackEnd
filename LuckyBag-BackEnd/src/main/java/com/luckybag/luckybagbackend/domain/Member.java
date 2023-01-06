@@ -12,24 +12,28 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
     private Long id;
 
+    // 아이디
     @Column(name = "user_id", nullable = false)
-    private String memberId; // 자바용
+    private String memberId;
 
+    // 비밀번호
     @Column(name = "user_password", nullable = false)
     private String memberPassword;
 
-    @Column(name = "member_name")
-    private String memberName;
-
     @OneToOne(mappedBy = "member")
     private LuckyBag luckyBag;
+
+    // 닉네임
     @Column(name = "nickname", nullable = false)
     private String nickname;
+
+    // 복주머니 생성 유무
     @Column
     @Convert(converter = BooleanToYNConverter.class)
     private boolean hasLuckyBag;
@@ -37,12 +41,9 @@ public class Member {
         this.hasLuckyBag = hasLuckyBag;
     }
 
-
-
     public MemberDTO toDTO() {
         return MemberDTO.builder()
                 .id(id)
-                .nickname(nickname)
                 .hasLuckyBag(hasLuckyBag)
                 .build();
     }
