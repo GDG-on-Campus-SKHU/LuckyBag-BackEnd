@@ -10,7 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MemberDTO {
+
     private Long id; // 회원번호
+
     private String nickname; // 닉네임
-    private boolean hasLuckyBag;
+
+    private boolean hasLuckyBag; // 복주머니 생성 유무
+
+
 }

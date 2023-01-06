@@ -1,63 +1,61 @@
 package com.luckybag.luckybagbackend.controller;
 
-import com.luckybag.luckybagbackend.domain.DTO.ColorDTO;
 import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
-import com.luckybag.luckybagbackend.service.CommonService;
+import com.luckybag.luckybagbackend.domain.DTO.NewLuckyBagDTO;
 import com.luckybag.luckybagbackend.service.LuckyBagService;
 import com.luckybag.luckybagbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 public class ServiceController {//Service Test 용 Controller
 
     private final LuckyBagService luckyBagService;
     private final MemberService memberService;
-    private final CommonService commonService;
-    @GetMapping("/findAll")
+
+// [Get] /luckybags -> 모두 조회
+// [Get] /luckybags/{id} -> 복주머니 리스트에서 하나만 조회
+// [Post] /members/{id}/luckybags -> 저장
+// [patch] /luckybas/{id} -> 수정
+// [delete] /luckybags/{id} -> 삭제
+
+    // 복주머니 모두 조회
+    // 6개 씩 페이징 예정
+    @GetMapping("/luckybags")
     public ResponseEntity<List<LuckyBagDTO>> findAll() {
         return ResponseEntity.ok(luckyBagService.findByAll());
     }
-    @GetMapping("/findByMemberId")
-    public ResponseEntity<LuckyBagDTO> findByMemberId() {
-        MemberDTO memberDTO = memberService.findById(1L);
+
+    // 복주머니 하나만 조회
+    @GetMapping("/luckybags/{id}")
+    public ResponseEntity<LuckyBagDTO> findByMemberId(@PathVariable("id") Long id) {
+        MemberDTO memberDTO = memberService.findById(id);
         return ResponseEntity.ok(luckyBagService.findByMemberId(memberDTO));
     }
 
-    @GetMapping("/save/{id}")
-    public ResponseEntity save(@PathVariable Long id) {
-        ColorDTO colorDTO = ColorDTO.builder().colorId(1L).build();
-        MemberDTO memberDTO = memberService.findById(id);
-        if (memberDTO.isHasLuckyBag() == true) {//덕담을 썼다면 406에러
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("이미 덕담을 작성하였습니다.");
-        }
-        LuckyBagDTO luckyBagDTO = LuckyBagDTO.builder().memberDTO(memberDTO).colorDTO(colorDTO).comment("새해입니다.").likeCount(3L).build();
-        LuckyBagDTO saveLuckyBag = commonService.save(luckyBagDTO);
-        log.info("saveLuckyComment ={}",saveLuckyBag.getComment());
-        return ResponseEntity.ok(saveLuckyBag);
-    }
-    @GetMapping("/update")
-    public ResponseEntity update() {
-        MemberDTO memberDTO = memberService.findById(1L);
-        ColorDTO colorDTO = ColorDTO.builder().colorId(2L).build();
-        LuckyBagDTO luckyBagDTO = LuckyBagDTO.builder().memberDTO(memberDTO).colorDTO(colorDTO).comment("새해입니다.").likeCount(3L).build();
-        return ResponseEntity.ok(luckyBagService.update(luckyBagDTO));
+    // 복주머니 저장
+    @PostMapping("members/{id}/luckybags")
+    public ResponseEntity<LuckyBagDTO> save(@RequestBody NewLuckyBagDTO newLuckyBagDTO) {
+
+        // DTO를 파라미터로 받아 DTO를 리턴하는 saveEntity() 호출
+        LuckyBagDTO luckyBagDTO = luckyBagService.saveEntity(newLuckyBagDTO);
+
+        return ResponseEntity.ok(luckyBagDTO);
     }
 
-    @GetMapping("/delete")
-    public void delete() {
-        luckyBagService.deleteByMemberId(2L);
+    // 복주머니 삭제
+    // id로 복주머니를 찾아서 그 복주머니를 디비에서 삭제
+    // 삭제하려는 복주머니의 id로 삭제 요청이 들어오면 실행
+    @DeleteMapping("/luckybags/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+        luckyBagService.deleteByMemberId(id);
+        return ResponseEntity.ok(null);
     }
-
-
 }

@@ -6,9 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ColorDTO {
-    private Long colorId;
+public class NewLuckyBagDTO {
+
+    private String comment; // 내용
+
+    private String colorName; // 복주머니 색깔
+
+    private Long memberId;
+
 }
