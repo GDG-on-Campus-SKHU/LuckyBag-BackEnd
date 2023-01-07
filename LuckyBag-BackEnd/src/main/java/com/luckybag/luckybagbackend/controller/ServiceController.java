@@ -24,7 +24,7 @@ public class ServiceController {//Service Test 용 Controller
 
 // [Get] /luckybags -> 모두 조회
 // [Get] /luckybags/{id} -> 복주머니 리스트에서 하나만 조회
-// [Post] /members/{id}/{colorId}/luckybags -> 저장
+// [Post] /luckybags/{id} -> 저장
 // [patch] /luckybas/{id} -> 수정
 // [delete] /luckybags/{id} -> 삭제
 
@@ -45,7 +45,7 @@ public class ServiceController {//Service Test 용 Controller
     }
 
     // 복주머니 저장
-    @PostMapping("members/{id}/luckybags")
+    @PostMapping("/luckybags/{id}")
     public ResponseEntity<LuckyBagDTO> save(@PathVariable("id") Long id,@RequestBody NewLuckyBagDTO newLuckyBagDTO) {
 
         // DTO를 파라미터로 받아 DTO를 리턴하는 saveEntity() 호출
