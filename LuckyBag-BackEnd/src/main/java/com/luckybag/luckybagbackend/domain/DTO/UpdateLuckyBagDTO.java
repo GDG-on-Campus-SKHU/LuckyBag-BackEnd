@@ -11,8 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateLuckyBagDTO {
 
-    private String comment; // 내용
-
+    private String comment;
     private Long memberId;
 
 }

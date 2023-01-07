@@ -6,8 +6,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Color {
-   RED,
-    BLUE,
-    GREEN
-    ;
+    RED, BLUE, GREEN
 }
