@@ -22,7 +22,6 @@ public class LuckyBag extends BaseTime {
     @Column
     private String comment;
 
-
     @OneToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -37,13 +36,4 @@ public class LuckyBag extends BaseTime {
                 .build();
     }
 
-    public LuckyBagDTO toDto() {
-
-        return LuckyBagDTO.builder()
-                .luckyBagId(id)
-                .comment(comment)
-                .color(color)
-                .memberDTO(member.toDTO())
-                .build();
-    }
 }

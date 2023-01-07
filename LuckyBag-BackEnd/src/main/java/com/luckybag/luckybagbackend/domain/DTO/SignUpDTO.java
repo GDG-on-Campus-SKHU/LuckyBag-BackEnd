@@ -1,6 +1,5 @@
 package com.luckybag.luckybagbackend.domain.DTO;
 
-import com.luckybag.luckybagbackend.domain.Color;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NewLuckyBagDTO {
+public class SignUpDTO {
+    private String memberId;
 
-    private String comment;
+    private String memberPassword;
 
-    private Color color;
+    private String nickName;
 }

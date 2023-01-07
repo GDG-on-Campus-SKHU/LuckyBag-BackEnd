@@ -26,16 +26,6 @@ public class LuckyBagService {
     private final LuckyBagRepository luckyBagRepository;
     private final MemberService memberService;
 
-    // 덕담 모두 조회
-    @Transactional(readOnly = true)
-    public List<LuckyBagDTO> findByAll() {
-        List<LuckyBag> luckyBags = luckyBagRepository.findAll();
-        return luckyBags.stream()
-                .map(LuckyBag::toDto)
-                .collect(Collectors.toList());
-    }
-
-    // 덕담 페이징
     @Transactional(readOnly = true)
     public Page<LuckyBagDTO> findAllWithPaging(Pageable pageable) {
         return luckyBagRepository.findAll(pageable).map(luckyBag ->
@@ -47,30 +37,39 @@ public class LuckyBagService {
                         .build());
     }
 
-    // 덕담 조회
     @Transactional(readOnly = true)
     public LuckyBagDTO findByMemberId(Long id) {
         LuckyBag luckyBag = luckyBagRepository.findByMemberId(id);
-        log.info("luckybag_Member_nickname={}",luckyBag.getMember().getNickname());
-        return luckyBag.toDto();
+        MemberDTO findMemberDTO = MemberDTO.builder()
+                .id(luckyBag.getMember().getId())
+                .nickname(luckyBag.getMember().getNickname())
+                .hasLuckyBag(luckyBag.getMember().isHasLuckyBag())
+                .build();
+
+        return LuckyBagDTO.builder()
+                .luckyBagId(luckyBag.getId())
+                .color(luckyBag.getColor())
+                .comment(luckyBag.getComment())
+                .memberDTO(findMemberDTO)
+                .build();
     }
 
-    // 덕담 저장
     @Transactional
     public LuckyBagDTO saveEntity(Long MemberId,NewLuckyBagDTO newLuckyBagDTO) {
         Member member = memberService.findEntityById(MemberId);
-        // 1. 읽어들여온 DTO 데이터를 바탕으로 Entity 클래스의 객체를 생성한다.
+
         LuckyBag luckyBag = LuckyBag.builder()
                 .color(newLuckyBagDTO.getColor())
                 .comment(newLuckyBagDTO.getComment())
                 .member(member)
                 .build();
-        // 2. 생성한 Entity 객체를 저장한다.
+
         LuckyBag savedLuckyBag = luckyBagRepository.save(luckyBag);
+
         Member savedMember = savedLuckyBag.getMember();
+
         member.updateHasLuckyBag(true);
-        log.info("savedMemberId = {} ",savedMember.getId());
-        // 3. dto return
+
         MemberDTO memberDto = MemberDTO.builder()
                 .id(savedMember.getId())
                 .nickname(savedMember.getNickname())
@@ -87,11 +86,11 @@ public class LuckyBagService {
         return luckyBagDTO;
     }
 
-    // 덕담 삭제
     @Transactional
     public void deleteByMemberId(Long memberId) {
         luckyBagRepository.deleteByMemberId(memberId);
     }
+
     @Transactional
     public LuckyBagDTO update(Long id, UpdateLuckyBagDTO updateluckyBagDTO) {
         LuckyBag luckyBag = luckyBagRepository.findByMemberId(id);

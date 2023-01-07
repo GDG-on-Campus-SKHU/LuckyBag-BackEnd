@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberDTO {
 
-    private Long id; // 회원번호
+    private Long id;
 
-    private String nickname; // 닉네임
+    private String nickname;
 
-    private boolean hasLuckyBag; // 복주머니 생성 유무
+    private boolean hasLuckyBag;
 
 
 }
