@@ -27,7 +27,8 @@ public class ServiceController {
     }
 
     @GetMapping("/luckybags/{id}")
-    public ResponseEntity<LuckyBagDTO> findByMemberId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> findByMemberId(@PathVariable("id") Long id) {
+
         return ResponseEntity.ok(luckyBagService.findByMemberId(id));
     }
 
