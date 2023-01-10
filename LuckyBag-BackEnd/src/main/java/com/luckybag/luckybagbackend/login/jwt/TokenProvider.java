@@ -26,6 +26,8 @@ public class TokenProvider {
     private final Key key;
     private final long validityTime;
 
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
+
     public TokenProvider(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.token-validity-in-milliseconds}") long validityTime) {
@@ -50,7 +52,7 @@ public class TokenProvider {
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setExpiration(tokenExpiredTime)
+                .setExpiration(new Date(now+REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -58,11 +60,9 @@ public class TokenProvider {
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
-
-
     }
-
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
         if (claims.get("auth") == null) {
@@ -100,5 +100,11 @@ public class TokenProvider {
             log.info("JWT claims string is empty.",e);
         }
         return false;
+    }
+
+    public Long getExpiration(String accessToken) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        long now = (new Date()).getTime();
+        return (expiration.getTime() - now);
     }
 }
