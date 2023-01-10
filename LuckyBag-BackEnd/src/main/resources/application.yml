@@ -20,4 +20,4 @@ spring:
       mode: always
 jwt:
   secret: ${JWT_SECRET_KEY}
-  token-validity-in-milliseconds: 86400000
+  token-validity-in-milliseconds: 3600000

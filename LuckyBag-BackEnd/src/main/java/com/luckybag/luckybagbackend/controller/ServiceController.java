@@ -2,6 +2,7 @@ package com.luckybag.luckybagbackend.controller;
 
 import com.luckybag.luckybagbackend.domain.DTO.*;
 import com.luckybag.luckybagbackend.service.LuckyBagService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,5 +50,6 @@ public class ServiceController {
         luckyBagService.update(id, updateLuckyBagDTO);
         return ResponseEntity.ok("수정 성공");
     }
+
 
 }
