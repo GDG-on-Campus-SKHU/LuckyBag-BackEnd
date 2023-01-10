@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,7 +41,7 @@ public class LuckyBagService {
 
     @Transactional(readOnly = true)
     public LuckyBagDTO findByMemberId(Long id) {
-        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id);
+        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성한 덕담이 존재하지 않습니다."));
         MemberDTO findMemberDTO = MemberDTO.builder()
                 .id(luckyBag.getMember().getId())
                 .nickname(luckyBag.getMember().getNickname())
@@ -93,7 +95,7 @@ public class LuckyBagService {
 
     @Transactional
     public LuckyBagDTO update(Long id, UpdateLuckyBagDTO updateluckyBagDTO) {
-        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id);
+        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성한 덕담이 존재하지 않습니다."));;
         return luckyBag.update(updateluckyBagDTO);
     }
 
