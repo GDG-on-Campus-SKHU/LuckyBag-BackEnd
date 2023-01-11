@@ -9,6 +9,7 @@ import com.luckybag.luckybagbackend.login.domain.dto.TokenDTO;
 import com.luckybag.luckybagbackend.login.jwt.TokenProvider;
 import com.luckybag.luckybagbackend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -46,12 +48,12 @@ public class MemberService {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.getMemberId(), loginDTO.getMemberPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
         TokenDTO tokenDTO = tokenProvider.createToken(authentication);
 
         //refresh token Redis에 저장
         redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenDTO.getRefreshToken(), tokenDTO.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
         log.info("{}",redisTemplate.opsForValue().get("RT:" + authentication.getName()));
+        
         return tokenDTO;
 
     }
@@ -111,4 +113,10 @@ public class MemberService {
 
         signUpMember.encodePassword(passwordEncoder);
     }
+
+    public Long findId(LoginDTO loginDTO) {
+        Member findMember = memberRepository.findByMemberId(loginDTO.getMemberId()).get();
+        return findMember.getId();
+    }
+
 }

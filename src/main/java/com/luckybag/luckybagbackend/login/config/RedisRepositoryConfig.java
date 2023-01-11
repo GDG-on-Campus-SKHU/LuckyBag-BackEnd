@@ -17,7 +17,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisRepositoryConfig {
     private final RedisProperties redisProperties;
     //lettuce
-
     @Value("${spring.redis.host}")
     private String redisHost;
 
@@ -27,7 +26,7 @@ public class RedisRepositoryConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(redisHost, redisPort);
-    }
+
 
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
