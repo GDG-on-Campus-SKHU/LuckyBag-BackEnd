@@ -18,6 +18,9 @@ spring:
   sql:
     init:
       mode: always
+  redis:
+    host: localhost
+    port: 6379
 jwt:
   secret: ${JWT_SECRET_KEY}
   token-validity-in-milliseconds: 3600000
