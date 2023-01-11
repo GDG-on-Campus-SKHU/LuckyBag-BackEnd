@@ -1,7 +1,9 @@
 package com.luckybag.luckybagbackend.login.controller;
 
 import com.luckybag.luckybagbackend.domain.DTO.SignUpDTO;
+import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.login.domain.dto.LoginDTO;
+import com.luckybag.luckybagbackend.login.domain.dto.LoginResponseDTO;
 import com.luckybag.luckybagbackend.login.domain.dto.LogoutDTO;
 import com.luckybag.luckybagbackend.login.domain.dto.TokenDTO;
 import com.luckybag.luckybagbackend.service.MemberService;
@@ -17,9 +19,10 @@ public class LoginController {
     private final MemberService memberService;
 
     @PostMapping("/login")
-    public TokenDTO login(@RequestBody LoginDTO memberLoginRequestDto) {
+    public LoginResponseDTO login(@RequestBody LoginDTO memberLoginRequestDto) {
         TokenDTO tokenDTO = memberService.login(memberLoginRequestDto);
-        return tokenDTO;
+        Long id = memberService.findId(memberLoginRequestDto);
+        return LoginResponseDTO.builder().tokenDTO(tokenDTO).id(id).build();
     }
 
     @PostMapping("/signup")
