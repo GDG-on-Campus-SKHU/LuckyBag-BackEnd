@@ -26,7 +26,7 @@ public class TokenProvider {
     private final Key key;
     private final long validityTime;
 
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
+
 
     public TokenProvider(
             @Value("${jwt.secret}") String secretKey,
@@ -41,7 +41,7 @@ public class TokenProvider {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
         log.info("authorities = {}",authorities);
-        long now = (new Date()).getTime();
+        long now = System.currentTimeMillis();
         Date tokenExpiredTime = new Date(now + validityTime);
 
         String accessToken = Jwts.builder()
@@ -52,17 +52,18 @@ public class TokenProvider {
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now+REFRESH_TOKEN_EXPIRE_TIME))
+                .setExpiration(tokenExpiredTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-
+        log.info("refresh Token={}",refreshToken);
         return TokenDTO.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
+                .refreshTokenExpirationTime(tokenExpiredTime)
                 .refreshToken(refreshToken)
-                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
+
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
         if (claims.get("auth") == null) {

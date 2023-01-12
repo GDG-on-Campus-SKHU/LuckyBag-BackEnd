@@ -23,4 +23,4 @@ spring:
     port: 6379
 jwt:
   secret: ${JWT_SECRET_KEY}
-  token-validity-in-milliseconds: 3600000
+  token-validity-in-milliseconds: 360000000
