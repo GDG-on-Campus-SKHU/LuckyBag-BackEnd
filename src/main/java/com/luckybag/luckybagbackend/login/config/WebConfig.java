@@ -11,17 +11,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer{
-    private final AuthenticationInterceptor authenticationInterceptor;
-    /*@Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(authenticationInterceptor)
-                .order(1)
-                .addPathPatterns("/luckybag/**");
-    }*/
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .exposedHeaders("")
+                .allowedOrigins("*")
                 .allowedMethods(HttpMethod.GET.name(),
                         HttpMethod.POST.name(),
                         HttpMethod.PATCH.name(),
