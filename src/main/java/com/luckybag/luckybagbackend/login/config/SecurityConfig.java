@@ -20,22 +20,23 @@ import org.springframework.web.cors.CorsUtils;
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final RedisTemplate redisTemplate;
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signup", "/login").permitAll()
-                .antMatchers("/log-out").hasAnyRole("ROLE_USER", "ADMIN")
-                .antMatchers("/luckybags/**").hasAnyRole("ROLE_USER", "USER")
+                .antMatchers("/signup","/login").permitAll()
+                .antMatchers("/log-out").authenticated()
+                .antMatchers("/luckybags/**").authenticated()
                 .and()
-                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                .addFilterBefore(new JwtFilter(tokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
