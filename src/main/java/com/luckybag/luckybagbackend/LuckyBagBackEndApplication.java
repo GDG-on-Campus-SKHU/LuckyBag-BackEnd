@@ -10,6 +10,11 @@ import java.util.TimeZone;
 @EnableJpaAuditing
 public class LuckyBagBackEndApplication {
 
+    @PostConstruct
+    void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(LuckyBagBackEndApplication.class, args);
     }
