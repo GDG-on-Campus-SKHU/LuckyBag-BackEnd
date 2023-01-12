@@ -24,18 +24,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signup","/login").permitAll()
+                .antMatchers("/signup", "/login").permitAll()
                 .antMatchers("/log-out").authenticated()
                 .antMatchers("/luckybags/**").authenticated()
                 .and()
-                .addFilterBefore(new JwtFilter(tokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .cors();
+        return        http.build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
