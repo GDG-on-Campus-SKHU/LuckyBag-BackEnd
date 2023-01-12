@@ -21,8 +21,8 @@ public class JwtFilter extends GenericFilter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        log.info("인증 시도");
         String token = resolveToken((HttpServletRequest) request);
-
         if (Strings.hasText(token) && tokenProvider.validateToken(token)) {
             String isLogout = (String) redisTemplate.opsForValue().get(token);
             log.info("isLogout={}", isLogout);

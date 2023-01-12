@@ -89,6 +89,7 @@ public class TokenProvider {
 
     public boolean validateToken(String token) {
         try {
+            log.info("토큰 검증");
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException exception) {
