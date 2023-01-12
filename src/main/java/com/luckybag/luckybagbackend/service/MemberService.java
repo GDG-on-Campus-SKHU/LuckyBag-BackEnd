@@ -51,9 +51,8 @@ public class MemberService {
         TokenDTO tokenDTO = tokenProvider.createToken(authentication);
 
         //refresh token Redis에 저장
-        redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenDTO.getRefreshToken(), tokenDTO.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
-        log.info("{}",redisTemplate.opsForValue().get("RT:" + authentication.getName()));
-        
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(), tokenDTO.getRefreshToken(), tokenDTO.getRefreshTokenExpirationTime().getTime(), TimeUnit.MILLISECONDS);
+
         return tokenDTO;
 
     }
@@ -94,7 +93,7 @@ public class MemberService {
         //새로운 토큰 생성
         TokenDTO newToken = tokenProvider.createToken(authentication);
         //refreshToken Redis 업데이트
-        redisTemplate.opsForValue().set("RT:" + authentication.getName(), newToken.getRefreshToken(), newToken.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set("RT:" + authentication.getName(), newToken.getRefreshToken(), newToken.getRefreshTokenExpirationTime().getTime(), TimeUnit.MILLISECONDS);
 
         return ResponseEntity.ok("토큰 정보 갱신");
     }
