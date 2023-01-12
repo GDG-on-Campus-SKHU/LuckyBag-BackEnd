@@ -39,8 +39,8 @@ public class SecurityConfig {
                 .antMatchers("/log-out").authenticated()
                 .antMatchers("/luckybags/**").authenticated()
                 .and()
-                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
-                /*.cors();*/
+                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .cors();
         return        http.build();
     }
     @Bean
