@@ -22,18 +22,18 @@ public class SecurityConfig {
     private final RedisTemplate redisTemplate;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/signup","/login").permitAll()
-                .antMatchers("/log-out").hasAnyRole("USER","ADMIN")
-                .antMatchers("/luckybags/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/signup", "/login").permitAll()
+                .antMatchers("/log-out").hasAnyRole("ROLE_USER", "ADMIN")
+                .antMatchers("/luckybags/**").hasAnyRole("ROLE_USER", "ADMIN")
                 .and()
-                .addFilterBefore(new JwtFilter(tokenProvider,redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean
