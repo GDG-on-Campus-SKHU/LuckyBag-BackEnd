@@ -23,6 +23,7 @@ public class JwtFilter extends GenericFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         log.info("인증 시도");
         String token = resolveToken((HttpServletRequest) request);
+        log.info("resolvetoken = {}");
         if (Strings.hasText(token) && tokenProvider.validateToken(token)) {
             String isLogout = (String) redisTemplate.opsForValue().get(token);
             log.info("isLogout={}", isLogout);
@@ -33,13 +34,14 @@ public class JwtFilter extends GenericFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
+        log.info("doFilter");
         chain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        log.info("bearerToken ={}", bearerToken.substring(7));
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            log.info("bearerToken ={}", bearerToken.substring(7));
             return bearerToken.substring(7);
         }
         return null;

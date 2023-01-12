@@ -4,6 +4,7 @@ import com.luckybag.luckybagbackend.domain.DTO.*;
 import com.luckybag.luckybagbackend.service.LuckyBagService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 // [POST] http://luckybags.duckdns.org/login
 // [POST] http://luckybags.duckdns.org/log-out
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class ServiceController {
     private final LuckyBagService luckyBagService;
@@ -38,6 +40,7 @@ public class ServiceController {
 
     @PostMapping("/luckybags/{id}")
     public ResponseEntity<LuckyBagDTO> save(@PathVariable("id") Long id, @RequestBody NewLuckyBagDTO newLuckyBagDTO) {
+        log.info("덕담 저장");
         LuckyBagDTO luckyBagDTO = luckyBagService.saveEntity(id, newLuckyBagDTO);
         return ResponseEntity.ok(luckyBagDTO);
     }

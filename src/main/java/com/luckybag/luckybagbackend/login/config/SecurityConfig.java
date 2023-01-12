@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/signup", "/login").permitAll()
                 .antMatchers("/log-out").hasAnyRole("ROLE_USER", "ADMIN")
-                .antMatchers("/luckybags/**").hasAnyRole("ROLE_USER", "ADMIN")
+                .antMatchers("/luckybags/**").hasAnyRole("ROLE_USER", "USER")
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
         return http.build();
