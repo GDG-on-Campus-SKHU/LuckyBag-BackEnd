@@ -39,15 +39,15 @@ public class SecurityConfig {
                 .antMatchers("/log-out").authenticated()
                 .antMatchers("/luckybags/**").authenticated()
                 .and()
-                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
-                .cors();
+                .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                /*.cors();*/
         return        http.build();
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-    @Bean
+    /*@Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*");
@@ -58,5 +58,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
+    }*/
 }
