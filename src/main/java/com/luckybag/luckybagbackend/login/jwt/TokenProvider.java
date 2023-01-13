@@ -55,7 +55,6 @@ public class TokenProvider {
                 .setExpiration(tokenExpiredTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
-        log.info("refresh Token={}",refreshToken);
         return TokenDTO.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
