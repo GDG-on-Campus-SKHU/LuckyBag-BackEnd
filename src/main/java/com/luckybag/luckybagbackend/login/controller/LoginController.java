@@ -1,7 +1,6 @@
 package com.luckybag.luckybagbackend.login.controller;
 
 import com.luckybag.luckybagbackend.domain.DTO.SignUpDTO;
-import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.login.domain.dto.LoginDTO;
 import com.luckybag.luckybagbackend.login.domain.dto.LoginResponseDTO;
 import com.luckybag.luckybagbackend.login.domain.dto.LogoutDTO;

@@ -1,17 +1,18 @@
 package com.luckybag.luckybagbackend.service;
 
 
+import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
 import com.luckybag.luckybagbackend.domain.DTO.SignUpDTO;
+import com.luckybag.luckybagbackend.domain.LuckyBag;
 import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.login.domain.dto.LoginDTO;
 import com.luckybag.luckybagbackend.login.domain.dto.LogoutDTO;
 import com.luckybag.luckybagbackend.login.domain.dto.TokenDTO;
 import com.luckybag.luckybagbackend.login.jwt.TokenProvider;
+import com.luckybag.luckybagbackend.repository.LuckyBagRepository;
 import com.luckybag.luckybagbackend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final LuckyBagRepository luckyBagRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -63,7 +66,6 @@ public class MemberService {
         if (!tokenProvider.validateToken(logoutDTO.getAccessToken())) {
             return new ResponseEntity<>("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
         }
-        log.info("검증 성공");
         //Access Token에서 authentication 가져온다.
         Authentication authentication = tokenProvider.getAuthentication(logoutDTO.getAccessToken());
         //Redis에서 해당 authentication으로 저장된 refresh token이 있을 경우 삭제한다.
@@ -118,4 +120,14 @@ public class MemberService {
         return findMember.getId();
     }
 
+    public List<LuckyBagDTO> findEntitiesById(Long id) {
+        List<LuckyBag> findLuckyBags = luckyBagRepository.findLuckyBagsByMemberId(id);
+        return findLuckyBags.stream().map(luckyBag ->
+                LuckyBagDTO.builder()
+                        .luckyBagId(luckyBag.getId())
+                        .comment(luckyBag.getComment())
+                        .color(luckyBag.getColor())
+                        .memberDTO(luckyBag.getMember().toDTO())
+                        .build()).collect(Collectors.toList());
+    }
 }

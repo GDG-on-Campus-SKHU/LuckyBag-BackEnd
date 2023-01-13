@@ -1,10 +1,6 @@
 package com.luckybag.luckybagbackend.service;
 
-import com.luckybag.luckybagbackend.domain.Color;
-import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
-import com.luckybag.luckybagbackend.domain.DTO.MemberDTO;
-import com.luckybag.luckybagbackend.domain.DTO.NewLuckyBagDTO;
-import com.luckybag.luckybagbackend.domain.DTO.UpdateLuckyBagDTO;
+import com.luckybag.luckybagbackend.domain.DTO.*;
 import com.luckybag.luckybagbackend.domain.LuckyBag;
 import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.repository.LuckyBagRepository;
@@ -17,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -39,22 +33,6 @@ public class LuckyBagService {
                         .build());
     }
 
-    @Transactional(readOnly = true)
-    public LuckyBagDTO findByMemberId(Long id) {
-        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성한 덕담이 존재하지 않습니다."));
-        MemberDTO findMemberDTO = MemberDTO.builder()
-                .id(luckyBag.getMember().getId())
-                .nickname(luckyBag.getMember().getNickname())
-                .hasLuckyBag(luckyBag.getMember().isHasLuckyBag())
-                .build();
-
-        return LuckyBagDTO.builder()
-                .luckyBagId(luckyBag.getId())
-                .color(luckyBag.getColor())
-                .comment(luckyBag.getComment())
-                .memberDTO(findMemberDTO)
-                .build();
-    }
 
     @Transactional
     public LuckyBagDTO saveEntity(Long MemberId,NewLuckyBagDTO newLuckyBagDTO) {
@@ -99,4 +77,11 @@ public class LuckyBagService {
         return luckyBag.update(updateluckyBagDTO);
     }
 
+    @Transactional(readOnly = true)
+    public FindLuckyBagDTO findByLuckyBag(Long id) {
+        LuckyBag luckyBag = luckyBagRepository.findById(id).get();
+        return FindLuckyBagDTO.builder()
+                .comment(luckyBag.getComment())
+                .luckyBagId(luckyBag.getId()).build();
+    }
 }
