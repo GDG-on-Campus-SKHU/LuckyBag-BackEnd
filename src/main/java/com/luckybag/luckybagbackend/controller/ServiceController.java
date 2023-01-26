@@ -19,9 +19,9 @@ import java.util.List;
 // [GET] http://luckybag2.duckdns.org/mebmer/{id}/luckybags -> 내가 쓴 메세지 모두 조회
 // [PATCH] http://luckybag2.duckdns.org/luckybags/{id} -> 수정
 // [DELETE] http://luckybag2.duckdns.org/luckybags/{id} -> 삭제
-// [POST] http://luckybag2.duckdns.org/signup
-// [POST] http://luckybag2.duckdns.org/login
-// [POST] http://luckybag2.duckdns.org/log-out
+// [POST] http://luckybag2.duckdns.org/signup -> 회원가입
+// [POST] http://luckybag2.duckdns.org/login -> 로그인
+// [POST] http://luckybag2.duckdns.org/log-out -> 로그아웃
 @RestController
 @Slf4j
 @RequiredArgsConstructor

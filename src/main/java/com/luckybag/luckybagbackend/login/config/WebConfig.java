@@ -14,7 +14,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:8080","http://localhost:3000","http://luckybag2.duckdns.org")
+                .allowedOrigins(
+                        "http://localhost:8080",
+                        "http://localhost:3000",
+                        "http://luckybag2.duckdns.org"
+                )
                 .allowedMethods(HttpMethod.GET.name(),
                         HttpMethod.POST.name(),
                         HttpMethod.PATCH.name(),
