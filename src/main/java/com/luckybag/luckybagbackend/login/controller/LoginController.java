@@ -21,7 +21,12 @@ public class LoginController {
     public LoginResponseDTO login(@RequestBody LoginDTO memberLoginRequestDto) {
         TokenDTO tokenDTO = memberService.login(memberLoginRequestDto);
         Long id = memberService.findId(memberLoginRequestDto);
-        return LoginResponseDTO.builder().tokenDTO(tokenDTO).id(id).build();
+        return LoginResponseDTO.builder().id(id)
+                .grantType(tokenDTO.getGrantType())
+                .accessToken(tokenDTO.getAccessToken())
+                .refreshToken(tokenDTO.getRefreshToken())
+                .refreshTokenExpirationTime(tokenDTO.getRefreshTokenExpirationTime())
+                .build();
     }
 
     @PostMapping("/signup")
