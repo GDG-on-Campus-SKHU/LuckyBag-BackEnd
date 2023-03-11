@@ -5,23 +5,14 @@ import com.luckybag.luckybagbackend.service.LuckyBagService;
 import com.luckybag.luckybagbackend.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// [GET] http://luckybag2.duckdns.org/luckybags -> 모두 조회
-// [GET] http://luckybag2.duckdns.org/luckybags/{id} -> 복주머니 리스트에서 하나만 조회
-// [POST] http://luckybag2.duckdns.org/mebmer/{id} -> 저장
-// [GET] http://luckybag2.duckdns.org/mebmer/{id}/luckybags -> 내가 쓴 메세지 모두 조회
-// [PATCH] http://luckybag2.duckdns.org/luckybags/{id} -> 수정
-// [DELETE] http://luckybag2.duckdns.org/luckybags/{id} -> 삭제
-// [POST] http://luckybag2.duckdns.org/signup -> 회원가입
-// [POST] http://luckybag2.duckdns.org/login -> 로그인
-// [POST] http://luckybag2.duckdns.org/log-out -> 로그아웃
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -30,9 +21,10 @@ public class ServiceController {
     private final MemberService memberService;
 
     @GetMapping("/luckybags")
-    public Page<LuckyBagDTO> findAllWithDefault(@PageableDefault(size = 6) Pageable pageable) {
-        Page<LuckyBagDTO> responses = luckyBagService.findAllWithPaging(pageable);
-        return responses;
+    public ResponseEntity<Slice<LuckyBagDTO>> findAllWithDefault(@PageableDefault(size = 6) Pageable pageable) {
+        Slice<LuckyBagDTO> responses = luckyBagService.findAllWithPaging(pageable);
+
+        return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/luckybags/{id}")
