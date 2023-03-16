@@ -26,14 +26,11 @@ public class Member implements UserDetails {
     @Column(name = "member_id", nullable = false)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private String memberId;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @Column(name = "user_password", nullable = false)
-    private String memberPassword;
-
-    @OneToOne(mappedBy = "member")
-    private LuckyBag luckyBag;
+    private String userPassword;
 
     @Column(name = "nickname", nullable = false)
     private String nickname;
@@ -49,14 +46,6 @@ public class Member implements UserDetails {
         this.hasLuckyBag = hasLuckyBag;
     }
 
-    public MemberDTO toDTO() {
-        return MemberDTO.builder()
-                .id(id)
-                .hasLuckyBag(hasLuckyBag)
-                .nickname(nickname)
-                .build();
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
@@ -66,12 +55,12 @@ public class Member implements UserDetails {
 
     @Override
     public String getPassword() {
-        return memberPassword;
+        return userPassword;
     }
 
     @Override
     public String getUsername() {
-        return memberId;
+        return username;
     }
 
     @Override
@@ -95,6 +84,6 @@ public class Member implements UserDetails {
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
-        this.memberPassword = passwordEncoder.encode(memberPassword);
+        this.userPassword = passwordEncoder.encode(userPassword);
     }
 }
