@@ -1,24 +1,14 @@
 package com.luckybag.luckybagbackend.domain.DTO;
 
-
-import com.luckybag.luckybagbackend.domain.Color;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class LuckyBagDTO {
-
-    private Long luckyBagId;
-
+public class LuckyBagUpdateDTO {
     private String comment;
-
-    private Color color;
-
-    private MemberDTO memberDTO;
-
 }

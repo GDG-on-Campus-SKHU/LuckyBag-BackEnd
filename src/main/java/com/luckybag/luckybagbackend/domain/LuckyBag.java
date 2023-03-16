@@ -1,7 +1,6 @@
 package com.luckybag.luckybagbackend.domain;
 
-import com.luckybag.luckybagbackend.domain.DTO.LuckyBagDTO;
-import com.luckybag.luckybagbackend.domain.DTO.UpdateLuckyBagDTO;
+import com.luckybag.luckybagbackend.domain.DTO.LuckyBagResponseDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -26,13 +25,15 @@ public class LuckyBag extends BaseTime {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public LuckyBagDTO update(UpdateLuckyBagDTO updateluckyBagDTO) {
-        this.comment = updateluckyBagDTO.getComment();
-        return LuckyBagDTO.builder()
-                .luckyBagId(id)
+    public void update(String updateComment) {
+        this.comment = updateComment;
+    }
+
+    public LuckyBagResponseDTO toDTO() {
+        return LuckyBagResponseDTO.builder()
+                .id(id)
                 .comment(comment)
                 .color(color)
-                .memberDTO(member.toDTO())
                 .build();
     }
 

@@ -26,22 +26,25 @@ public class TokenProvider {
     private final Key key;
     private final long validityTime;
 
-
-
     public TokenProvider(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.token-validity-in-milliseconds}") long validityTime) {
+
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+
         this.key = Keys.hmacShaKeyFor(keyBytes);
+
         this.validityTime = validityTime;
     }
 
     public TokenDTO createToken(Authentication authentication) {
+
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
-        log.info("authorities = {}",authorities);
+
         long now = System.currentTimeMillis();
+
         Date tokenExpiredTime = new Date(now + validityTime);
 
         String accessToken = Jwts.builder()
@@ -55,6 +58,7 @@ public class TokenProvider {
                 .setExpiration(tokenExpiredTime)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
+
         return TokenDTO.builder()
                 .grantType("Bearer")
                 .accessToken(accessToken)
@@ -65,6 +69,7 @@ public class TokenProvider {
 
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
+
         if (claims.get("auth") == null) {
             throw new RuntimeException("권한 정보가 담겨있지 않은 토큰입니다.");
         }
@@ -75,6 +80,7 @@ public class TokenProvider {
                         .collect(Collectors.toList());
 
         UserDetails principal = new User(claims.getSubject(), "", authorities);
+
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 
@@ -89,7 +95,9 @@ public class TokenProvider {
     public boolean validateToken(String token) {
         try {
             log.info("토큰 검증");
+
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException exception) {
             log.info("Invalid JWT Token", exception);
@@ -104,8 +112,15 @@ public class TokenProvider {
     }
 
     public Long getExpiration(String accessToken) {
-        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+
         long now = (new Date()).getTime();
+
         return (expiration.getTime() - now);
     }
 }
