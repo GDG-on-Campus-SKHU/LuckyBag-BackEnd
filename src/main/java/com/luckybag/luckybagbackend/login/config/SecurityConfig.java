@@ -20,7 +20,6 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final RedisTemplate redisTemplate;
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -36,8 +35,10 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(new JwtFilter(tokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
                 .cors();
+
         return        http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
