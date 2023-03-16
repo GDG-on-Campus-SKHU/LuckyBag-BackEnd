@@ -6,10 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class FindLuckyBagDTO {
+public class LuckyBagUpdateDTO {
     private String comment;
-    private Long luckyBagId;
 }

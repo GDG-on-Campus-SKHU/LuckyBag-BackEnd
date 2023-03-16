@@ -5,76 +5,77 @@ import com.luckybag.luckybagbackend.domain.LuckyBag;
 import com.luckybag.luckybagbackend.domain.Member;
 import com.luckybag.luckybagbackend.repository.LuckyBagRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class LuckyBagService {
 
     private final LuckyBagRepository luckyBagRepository;
-    private final MemberService memberService;
+    private final AuthService authService;
 
     @Transactional(readOnly = true)
-    public Slice<LuckyBagDTO> findAllWithPaging(Pageable pageable) {
+    public Page<LuckyBagResponseDTO> findAll(Pageable pageable) {
         return luckyBagRepository.findAll(pageable).map(LuckyBag::toDTO);
     }
 
 
     @Transactional
-    public LuckyBagDTO saveEntity(Long MemberId,NewLuckyBagDTO newLuckyBagDTO) {
-        Member member = memberService.findEntityById(MemberId);
+    public LuckyBagResponseDTO save(LuckyBagRequestDTO luckyBagRequestDTO, Principal principal) {
+        Member member = authService.findByUsername(principal.getName());
 
         LuckyBag luckyBag = LuckyBag.builder()
-                .color(newLuckyBagDTO.getColor())
-                .comment(newLuckyBagDTO.getComment())
+                .color(luckyBagRequestDTO.getColor())
+                .comment(luckyBagRequestDTO.getComment())
                 .member(member)
                 .build();
 
-        LuckyBag savedLuckyBag = luckyBagRepository.save(luckyBag);
-
-        Member savedMember = savedLuckyBag.getMember();
+        luckyBagRepository.save(luckyBag);
 
         member.updateHasLuckyBag(true);
 
-        MemberDTO memberDto = savedMember.toDTO();
-
-        LuckyBagDTO luckyBagDTO = LuckyBagDTO.builder()
-                .luckyBagId(savedLuckyBag.getId())
-                .color(savedLuckyBag.getColor())
-                .comment(savedLuckyBag.getComment())
-                .memberDTO(memberDto)
-                .build();
-
-        return luckyBagDTO;
+        return luckyBag.toDTO();
     }
 
     @Transactional
-    public void deleteByMemberId(Long memberId) {
-        luckyBagRepository.deleteByMemberId(memberId);
+    public void deleteById(Long id) {
+        luckyBagRepository.deleteById(id);
     }
 
     @Transactional
-    public LuckyBagDTO update(Long id, UpdateLuckyBagDTO updateluckyBagDTO) {
-        LuckyBag luckyBag = luckyBagRepository.findByMemberId(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성한 덕담이 존재하지 않습니다."));
+    public void update(Long id, LuckyBagUpdateDTO updateluckyBagUpdateDTO) {
+        LuckyBag luckyBag = luckyBagRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "작성한 덕담이 존재하지 않습니다."));
 
-        return luckyBag.update(updateluckyBagDTO);
+        luckyBag.update(updateluckyBagUpdateDTO.getComment());
     }
 
     @Transactional(readOnly = true)
-    public FindLuckyBagDTO findByLuckyBag(Long id) {
-        LuckyBag luckyBag = luckyBagRepository.findById(id).get();
+    public LuckyBagResponseDTO findById(Long id) {
+        LuckyBag luckyBag = luckyBagRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 ID에 맞는 복주머니가 존재하지 않습니다."));
 
-        return FindLuckyBagDTO.builder()
-                .comment(luckyBag.getComment())
-                .luckyBagId(luckyBag.getId())
-                .build();
+        return luckyBag.toDTO();
+    }
+
+    public List<LuckyBagResponseDTO> findAllByMember(Principal principal) {
+        Member member = authService.findByUsername(principal.getName());
+
+        List<LuckyBagResponseDTO> luckyBags = luckyBagRepository.findAllByMember(member)
+                .stream()
+                .map(LuckyBag::toDTO)
+                .collect(Collectors.toList());
+
+        return luckyBags;
     }
 }
